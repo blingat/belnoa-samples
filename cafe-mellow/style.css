@@ -26,7 +26,7 @@
   --fs-2: 20px;           /* 리드·소제목 */
   --fs-3: 25px;           /* 섹션 제목 */
   --fs-4: 32px;           /* (구) 제목 상한 — 최종 CTA 모바일과 공용 */
-  --fs-hero: 40px;        /* 히어로 모바일 (데스크톱 64px) */
+  --fs-hero: 34px;        /* 히어로 모바일 (데스크톱 64px) — G1 실측: 확정 카피 1행이 40px=400px로 390 컨테이너(358)를 넘어 34px(339px)로 조정. 상세는 G1 보고 */
   --fw-normal: 400;
   --fw-bold: 700;
   --lh: 1.5;
@@ -117,27 +117,19 @@ html.js .reveal.in { opacity: 1; transform: none; }
 .header-nav a { color: var(--text-sub); transition: color var(--ease); }
 .header-nav a:hover { color: var(--text); }
 
-/* ===== SECTION: hero (크림 배경 + 대형 헤드라인) ===== */
-.hero { background: var(--surface); padding: var(--sp-6) 0 var(--sp-7); }
+/* ===== SECTION: hero (G1 — 풀블리드 사진 + 단색 구간 적층) ===== */
+.hero { background: var(--surface); }
+.hero-photo-g1 img { width: 100%; height: 480px; object-fit: cover; object-position: 62% 50%; }
+.hero-body { padding: var(--sp-4) 0 var(--sp-6); }
 .hero-title {
   font-size: var(--fs-hero); font-weight: var(--fw-bold);
   line-height: 1.15; letter-spacing: -0.01em;
-  margin-bottom: var(--sp-5);
+  margin-bottom: var(--sp-3);
 }
 .hero-line { display: block; }
-.hero-line-accent { color: var(--accent-deep); }
-.hl {
-  background: none; color: inherit; padding: 0 2px;
-  box-shadow: inset 0 -0.42em 0 rgba(176, 125, 79, 0.45); /* 형광펜 단색 밴드 (그라디언트 아님) */
-}
+.hero-em { color: var(--accent-deep); } /* 강조 1곳 — 색으로만 (형광펜 밴드 금지, G0 개정 4) */
 .hero-actions { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
-.hero-hours { margin-top: var(--sp-3); color: var(--text-sub); }
-.hero-photo { position: relative; margin-top: var(--sp-5); }
-.hero-photo img { width: 100%; border-radius: var(--radius); aspect-ratio: 3 / 2; object-fit: cover; }
-.hero-tags {
-  position: absolute; left: var(--sp-3); bottom: var(--sp-3);
-  display: flex; flex-wrap: wrap; gap: var(--sp-2);
-}
+.btn-hero { min-height: 52px; } /* G1 명세: 히어로 CTA 높이 52px */
 
 /* ===== BLOCK: marquee (우드 띠 1개, 느린 흐름) ===== */
 .marquee { background: var(--accent); color: var(--text); overflow: hidden; padding: var(--sp-3) 0; }
@@ -263,10 +255,9 @@ html.js .reveal.in { opacity: 1; transform: none; }
   .container { padding: 0 var(--sp-4); }
   .header-nav { display: flex; }
   .section { padding: var(--sp-8) 0; }
-  .hero { padding: var(--sp-7) 0 var(--sp-8); }
+  .hero-photo-g1 img { height: 560px; object-position: 50% 45%; }
+  .hero-body { padding: var(--sp-7) 0 var(--sp-8); }
   .hero-title { font-size: 64px; }
-  .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-6); align-items: center; }
-  .hero-photo { margin-top: 0; }
   .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-4); }
   .menu-feature { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-6); align-items: center; }
   .menu-feature-text { padding-top: 0; }
