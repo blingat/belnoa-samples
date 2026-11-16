@@ -11,6 +11,7 @@
   --surface: #FAF6F0;     /* 표면 30% (크림) */
   --accent: #B07D4F;      /* 우드 액센트 10% 이하 */
   --accent-deep: #8A5A2E; /* 작은 텍스트용 우드 (흰 배경 대비 5.8:1) */
+  --accent-bright: #F0C48C; /* 사진 위 강조용 밝은 우드 (다크 스크림 위에서 읽히는 톤) */
   --text: #1F1B16;        /* 본문 텍스트 (흰 배경 대비 16.9:1) */
   --text-sub: #5A5248;    /* 보조 텍스트 (흰 배경 대비 7.7:1) */
   --line: #E7DFD3;        /* 구분선 (장식 전용) */
@@ -47,7 +48,7 @@
   --shadow-sm: 0 -2px 12px rgba(31, 27, 22, 0.08);
   --shadow-pill: 0 2px 10px rgba(31, 27, 22, 0.18);
   --ease: 200ms ease-out;
-  --ease-reveal: 280ms ease-out;
+  --ease-reveal: 500ms ease-out; /* 인터랙션 패스 명세: 리빌 400–600ms 구간 */
 }
 
 /* ===== BASE ===== */
@@ -78,8 +79,9 @@ button { font: inherit; cursor: pointer; background: none; border: none; color: 
   min-height: 48px; padding: var(--sp-2) var(--sp-4);
   font-size: var(--fs-1); font-weight: var(--fw-bold);
   border-radius: var(--radius);
-  transition: transform var(--ease), background-color var(--ease), border-color var(--ease);
+  transition: transform var(--ease), background-color var(--ease), border-color var(--ease), box-shadow var(--ease);
 }
+.btn:hover { box-shadow: 0 4px 14px rgba(31, 27, 22, 0.14); }
 .btn:active { transform: scale(0.97); }
 .btn-wood { background: var(--accent); color: var(--text); }
 .btn-wood:hover { background: #9C6E42; }
@@ -105,29 +107,65 @@ button { font: inherit; cursor: pointer; background: none; border: none; color: 
 .pill-hero { background: var(--accent); color: var(--text); margin-bottom: var(--sp-4); }
 .pill-tag { background: rgba(255, 255, 255, 0.94); color: var(--text); box-shadow: var(--shadow-pill); }
 
-/* ===== 공통: 헤드라인 페이드인 (JS 있을 때만 숨김 — 폴백 안전) ===== */
-html.js .reveal { opacity: 0; transform: translateY(10px); transition: opacity var(--ease-reveal), transform var(--ease-reveal); }
+/* ===== 공통: 스크롤 리빌 (JS 있을 때만 숨김 — 폴백 안전) =====
+   제목→사진→카드가 --rvd(지연 변수) 간격으로 순차 등장. 지연은 script.js가 data-rv-delay·data-rv-group으로 주입 */
+html.js .reveal { opacity: 0; transform: translateY(14px); transition: opacity var(--ease-reveal), transform var(--ease-reveal); transition-delay: var(--rvd, 0ms); }
 html.js .reveal.in { opacity: 1; transform: none; }
 
-/* ===== BLOCK: header ===== */
-.site-header { border-bottom: 1px solid var(--line); background: var(--bg); }
+/* ===== BLOCK: header (인터랙션 패스: sticky + 스크롤스파이 강조) ===== */
+.site-header { position: sticky; top: 0; z-index: 40; border-bottom: 1px solid var(--line); background: var(--bg); }
 .header-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); min-height: 56px; }
 .brand { font-size: var(--fs-2); font-weight: var(--fw-bold); }
 .header-nav { display: none; gap: var(--sp-4); }
 .header-nav a { color: var(--text-sub); transition: color var(--ease); }
 .header-nav a:hover { color: var(--text); }
+.header-nav a.active { color: var(--text); font-weight: var(--fw-bold); box-shadow: inset 0 -2px 0 var(--accent); }
+section[id] { scroll-margin-top: 72px; } /* sticky 헤더에 앵커 도착 지점이 가려지지 않게 */
 
-/* ===== SECTION: hero (G1 — 풀블리드 사진 + 단색 구간 적층) ===== */
-.hero { background: var(--surface); }
-.hero-photo-g1 img { width: 100%; height: 480px; object-fit: cover; object-position: 62% 50%; }
-.hero-body { padding: var(--sp-4) 0 var(--sp-6); }
+/* ===== SECTION: hero (재설계 — 사진 풀블리드 + 하단 스크림 위 오버레이 적층) ===== */
+.hero { position: relative; background: var(--dark); }
+.hero-photo-g1 { position: absolute; inset: 0; overflow: hidden; } /* 패럴랙스 이동 시 사진 가장자리가 비지 않게 */
+/* 패럴랙스: SDA 지원 시 아래 @supports 블록의 CSS 애니메이션, 미지원 시 script.js가 translateY(±10px)를 얹는다. scale(1.08)은 이동 여유분 */
+.hero-photo-g1 img { width: 100%; height: 100%; object-fit: cover; object-position: 62% 50%; transform: scale(1.08); will-change: transform; }
+/* 하단 스크림 — 사진 위 흰 글자 가독성 (투명 → 다크) */
+.hero-photo-g1::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(26, 21, 16, 0.82) 0%, rgba(26, 21, 16, 0.46) 42%, rgba(26, 21, 16, 0.05) 72%, rgba(26, 21, 16, 0) 85%);
+}
+.hero-body {
+  position: relative; z-index: 1;
+  min-height: calc(100vh - 56px); min-height: calc(100svh - 56px); /* sticky 헤더 56px를 뺀 첫 화면 전체 */
+  display: flex; align-items: flex-end;
+  padding: var(--sp-7) 0 var(--sp-8); /* 아래 96px: 모바일 sticky 바(56px)와 CTA가 겹치지 않게 */
+}
 .hero-title {
   font-size: var(--fs-hero); font-weight: var(--fw-bold);
   line-height: 1.15; letter-spacing: -0.01em;
   margin-bottom: var(--sp-3);
+  color: #FFFFFF; text-shadow: 0 1px 16px rgba(26, 21, 16, 0.35);
 }
 .hero-line { display: block; }
-.hero-em { color: var(--accent-deep); } /* 강조 1곳 — 색으로만 (형광펜 밴드 금지, G0 개정 4) */
+.hero-em { color: var(--accent-bright); } /* 강조 1곳 — 사진 위에서 읽히는 밝은 톤 (형광펜 밴드 금지, G0 개정 4) */
+
+/* 스크롤 구동 패럴랙스 (Modern Web Guidance — JS 스크롤 리스너보다 CSS SDA 우선).
+   타임라인은 scroll(root): view() 타임라인은 검증 환경(헤드리스 Chromium)에서 스크롤에 진행이
+   따라오지 않아 실측으로 제외했다 (2026-11-16 실측 — 초기값만 계산되고 동결).
+   animation-range 0–900px = 히어로가 첫 화면을 빠져나가는 스크롤 구간에만 패럴랙스를 매핑.
+   @supports로 감싸 미지원 브라우저는 script.js rAF 패럴랙스가 폴백하고,
+   모션은 no-preference에서만 opt-in — reduce에서는 애니메이션 자체가 없어 최종 상태가 그대로 보인다 */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-photo-g1 img {
+      animation: hero-parallax linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0px 900px;
+    }
+    @keyframes hero-parallax {
+      from { transform: translateY(-10px) scale(1.08); }
+      to { transform: translateY(10px) scale(1.08); }
+    }
+  }
+}
 .hero-actions { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
 .btn-hero { min-height: 52px; } /* G1 명세: 히어로 CTA 높이 52px */
 
@@ -165,7 +203,22 @@ html.js .reveal.in { opacity: 1; transform: none; }
 .menu-feature-name { font-size: var(--fs-3); font-weight: var(--fw-bold); margin-bottom: var(--sp-1); }
 .menu-feature-desc { color: var(--text-sub); margin-bottom: var(--sp-2); }
 .menu-feature-price { font-size: var(--fs-2); font-weight: var(--fw-bold); }
-.menu-group { margin-bottom: var(--sp-5); }
+/* 메뉴 카테고리 탭: 클릭 시 해당 그룹으로 부드럽게 이동 + 하이라이트 (2단 나열·전 가격 공개 구조는 유지) */
+.menu-tabs { display: flex; gap: var(--sp-2); margin-bottom: var(--sp-5); }
+.menu-tab {
+  min-height: 44px; padding: var(--sp-2) var(--sp-4);
+  border: 1px solid var(--line); border-radius: 999px;
+  background: var(--bg); color: var(--text-sub); font-weight: var(--fw-bold);
+  transition: background-color var(--ease), color var(--ease), border-color var(--ease), transform var(--ease);
+}
+.menu-tab:active { transform: scale(0.97); }
+.menu-tab.is-active { background: var(--text); color: var(--bg); border-color: var(--text); }
+.menu-group { margin-bottom: var(--sp-5); border-radius: var(--radius); scroll-margin-top: 86px; } /* 72px + 리빌 상승분 14px — 탭 이동 시 제목이 헤더에 붙지 않게 */
+.menu-group.flash { animation: menu-flash 1.2s ease-out; }
+@keyframes menu-flash {
+  0% { background-color: rgba(176, 125, 79, 0.10); box-shadow: 0 0 0 8px rgba(176, 125, 79, 0.10); }
+  100% { background-color: rgba(176, 125, 79, 0); box-shadow: 0 0 0 8px rgba(176, 125, 79, 0); }
+}
 .menu-group-title { font-size: var(--fs-2); font-weight: var(--fw-bold); padding-bottom: var(--sp-2); border-bottom: 2px solid var(--text); margin-bottom: var(--sp-2); }
 .price-list li { display: flex; align-items: baseline; gap: var(--sp-2); padding: var(--sp-2) 0; }
 .item-name { font-weight: var(--fw-normal); }
@@ -249,9 +302,27 @@ html.js .reveal.in { opacity: 1; transform: none; }
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* ===== 모션 최소화 설정 존중 ===== */
+/* ===== 사진 호버 (데스크톱·포인터 정밀 기기만 — 모바일 무영향) ===== */
+@media (hover: hover) and (min-width: 768px) {
+  .menu-feature-photo, .ig-photo { overflow: hidden; border-radius: var(--radius); }
+  .menu-feature-photo img, .ig-photo img { transition: transform 350ms ease-out; }
+  .menu-feature-photo:hover img, .ig-photo:hover img { transform: scale(1.03); }
+  .ig-photo { position: relative; }
+  .ig-photo::after {
+    content: ""; position: absolute; inset: 0; border-radius: var(--radius); pointer-events: none;
+    background: rgba(31, 27, 22, 0.42) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='20' height='20' x='2' y='2' rx='5' ry='5'/%3E%3Cpath d='M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z'/%3E%3Cline x1='17.5' x2='17.51' y1='6.5' y2='6.5'/%3E%3C/svg%3E") center / 28px 28px no-repeat;
+    opacity: 0; transition: opacity 250ms ease-out;
+  }
+  .ig-photo:hover::after { opacity: 1; }
+}
+
+/* ===== 모션 최소화 설정 존중 — 켜져 있으면 모션 전부 끄고 콘텐츠는 즉시 표시 ===== */
 @media (prefers-reduced-motion: reduce) {
-  html.js .reveal { transition: none; }
+  html { scroll-behavior: auto; }
+  html.js .reveal { opacity: 1; transform: none; transition: none; }
+  .menu-group.flash { animation: none; }
+  .hero-photo-g1 img { transform: none; will-change: auto; }
+  .menu-feature-photo img, .ig-photo img { transition: none; }
 }
 
 /* ===== 반응형: 태블릿·데스크톱 ===== */
@@ -259,8 +330,8 @@ html.js .reveal.in { opacity: 1; transform: none; }
   .container { padding: 0 var(--sp-4); }
   .header-nav { display: flex; }
   .section { padding: var(--sp-8) 0; }
-  .hero-photo-g1 img { height: 560px; object-position: 50% 45%; }
-  .hero-body { padding: var(--sp-7) 0 var(--sp-8); }
+  .hero-photo-g1 img { object-position: 50% 42%; }
+  .hero-body { padding: var(--sp-8) 0; }
   .hero-title { font-size: 64px; }
   .about { padding: var(--sp-9) 0; } /* P-1 데스크톱 100–140px 구간: 128px */
   .menu { padding: var(--sp-9) 0; } /* P-1 데스크톱 100–140px 구간: 128px */

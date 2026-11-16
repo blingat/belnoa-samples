@@ -30,24 +30,24 @@
 
 <main id="top">
 
-  <!-- ===== SECTION: hero (G1 — 풀블리드 사진 + 단색 구간에 배지·헤드라인·CTA 적층) ===== -->
+  <!-- ===== SECTION: hero (재설계 — 사진 풀블리드 + 하단 스크림 위 배지·헤드라인·CTA 오버레이 적층) ===== -->
   <section class="hero">
     <figure class="hero-photo-g1">
       <img src="assets/hero-g1.jpg" alt="카페 멜로우 매장 내부 — 화이트 테이블과 라이트 우드 의자, 우드 패널 벽" width="2400" height="1929" fetchpriority="high">
     </figure>
     <div class="hero-body">
       <div class="container">
-        <p class="pill pill-hero">동네 스페셜티 카페</p>
+        <p class="pill pill-hero reveal">동네 스페셜티 카페</p>
         <h1 class="hero-title reveal">
           <span class="hero-line">매일 아침 <span class="hero-em">볶은 원두</span>로만</span>
           <span class="hero-line">내립니다</span>
         </h1>
-        <div class="hero-actions">
+        <div class="hero-actions reveal" data-rv-delay="120">
           <a class="btn btn-wood btn-hero" href="https://map.naver.com/p/search/%EC%84%9C%EC%9A%B8%20%EA%B0%95%EB%8F%99%EA%B5%AC%20%EC%95%84%EB%A6%AC%EC%88%98%EB%A1%9C%2021" target="_blank" rel="noopener">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
             길찾기
           </a>
-          <button type="button" class="btn btn-line btn-hero js-call">
+          <button type="button" class="btn btn-line-dark btn-hero js-call">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             전화하기
           </button>
@@ -63,22 +63,22 @@
         <div class="about-intro">
           <p class="section-eyebrow">ABOUT</p>
           <h2 class="section-title reveal">매일 아침 볶는 데는, 이유가 있습니다</h2>
-          <figure class="about-photo">
+          <figure class="about-photo reveal" data-rv-delay="100">
             <img src="assets/roasting-about.jpg" alt="로스터기에서 볶는 중인 원두를 트라이어에 담아 상태를 확인하는 모습" width="1920" height="1280" loading="lazy">
           </figure>
         </div>
-        <div class="cards">
-          <article class="card">
+        <div class="cards" data-rv-group="200">
+          <article class="card reveal">
             <span class="point-num">01</span>
             <h3 class="point-title">직접 로스팅</h3>
             <p class="point-desc">매일 아침, 매장에서 직접 볶은 원두로만 내립니다. 볶은 지 오래된 원두는 쓰지 않습니다.</p>
           </article>
-          <article class="card">
+          <article class="card reveal">
             <span class="point-num">02</span>
             <h3 class="point-title">시그니처 크림라떼</h3>
             <p class="point-desc">직접 볶은 원두의 에스프레소에 부드러운 크림을 올린, 멜로우의 시그니처 메뉴입니다.</p>
           </article>
-          <article class="card">
+          <article class="card reveal">
             <span class="point-num">03</span>
             <h3 class="point-title">원두 구매 가능</h3>
             <p class="point-desc">매장에서 마신 그 원두를 집에서도. 매장에서 직접 볶은 원두를 그대로 구매할 수 있습니다.</p>
@@ -95,10 +95,10 @@
       <h2 class="section-title reveal">가격, 전부 공개합니다</h2>
 
       <div class="menu-feature">
-        <figure class="menu-feature-photo">
+        <figure class="menu-feature-photo reveal" data-rv-delay="100">
           <img src="assets/cream-latte.jpg" alt="카페 멜로우 시그니처 크림라떼" width="1920" height="1280" loading="lazy">
         </figure>
-        <div class="menu-feature-text">
+        <div class="menu-feature-text reveal" data-rv-delay="200">
           <p class="badge">시그니처</p>
           <h3 class="menu-feature-name">크림라떼</h3>
           <p class="menu-feature-desc">직접 볶은 원두의 에스프레소에 멜로우 크림을 올린 대표 메뉴입니다.</p>
@@ -106,8 +106,13 @@
         </div>
       </div>
 
+      <div class="menu-tabs" role="group" aria-label="메뉴 카테고리 바로가기">
+        <button type="button" class="menu-tab is-active" data-cat="coffee" aria-pressed="true">커피</button>
+        <button type="button" class="menu-tab" data-cat="dessert" aria-pressed="false">디저트</button>
+      </div>
+
       <div class="menu-cols">
-        <div class="menu-group">
+        <div class="menu-group reveal" id="menu-coffee" data-cat="coffee">
           <h3 class="menu-group-title">커피</h3>
           <ul class="price-list">
             <li><span class="item-name">아메리카노</span><span class="dots" aria-hidden="true"></span><span class="item-price">4,500원</span></li>
@@ -117,7 +122,7 @@
             <li><span class="item-name">크림라떼 <span class="tag">시그니처</span></span><span class="dots" aria-hidden="true"></span><span class="item-price">6,500원</span></li>
           </ul>
         </div>
-        <div class="menu-group">
+        <div class="menu-group reveal" id="menu-dessert" data-cat="dessert" data-rv-delay="120">
           <h3 class="menu-group-title">디저트</h3>
           <ul class="price-list">
             <li><span class="item-name">휘낭시에</span><span class="dots" aria-hidden="true"></span><span class="item-price">3,000원</span></li>
@@ -136,7 +141,7 @@
     <img src="assets/roasting.jpg" alt="매장에서 직접 볶은 원두를 식히는 모습" width="2736" height="912" loading="lazy">
     <div class="fullbleed-caption">
       <div class="container">
-        <span class="pill pill-tag">매일 아침 직접 볶는 원두</span>
+        <span class="pill pill-tag reveal">매일 아침 직접 볶는 원두</span>
       </div>
     </div>
   </section>
@@ -147,7 +152,7 @@
       <p class="section-eyebrow">INFO</p>
       <h2 class="section-title reveal">평일 아침 8시, 문 엽니다</h2>
       <div class="info-grid">
-        <dl class="info-list">
+        <dl class="info-list reveal" data-rv-delay="100">
           <div class="info-row">
             <dt>영업시간</dt>
             <dd>
@@ -166,7 +171,7 @@
             <dd>주차 안내는 매장으로 문의해 주세요.</dd>
           </div>
         </dl>
-        <div class="map-slot">
+        <div class="map-slot reveal" data-rv-delay="200">
           <figure class="map-figure">
             <img src="assets/map.jpg" alt="카페 멜로우 위치 지도 — 서울 강동구 아리수로 21" width="780" height="520" loading="lazy">
             <figcaption class="map-credit">© OpenStreetMap contributors</figcaption>
@@ -182,18 +187,18 @@
     <div class="container">
       <p class="section-eyebrow">INSTAGRAM</p>
       <h2 class="section-title reveal">매일의 로스팅, 여기서 먼저</h2>
-      <div class="ig-grid">
-        <figure class="ig-photo">
+      <div class="ig-grid" data-rv-group="100">
+        <figure class="ig-photo reveal">
           <img src="assets/ig-1.jpg" alt="스완 라떼아트 한 잔" width="900" height="900" loading="lazy">
         </figure>
-        <figure class="ig-photo">
+        <figure class="ig-photo reveal">
           <img src="assets/ig-2.jpg" alt="갓 볶은 원두 클로즈업" width="900" height="900" loading="lazy">
         </figure>
-        <figure class="ig-photo">
+        <figure class="ig-photo reveal">
           <img src="assets/ig-3.jpg" alt="라떼아트를 그리는 밀크 푸어링" width="900" height="900" loading="lazy">
         </figure>
       </div>
-      <a class="btn btn-line btn-block" href="https://www.instagram.com/" target="_blank" rel="noopener">인스타그램에서 보기</a>
+      <a class="btn btn-line btn-block reveal" data-rv-delay="300" href="https://www.instagram.com/" target="_blank" rel="noopener">인스타그램에서 보기</a>
     </div>
   </section>
 
@@ -201,8 +206,8 @@
   <section class="section final-cta">
     <div class="container">
       <h2 class="final-title reveal">오늘 볶은 커피, 마시러 오세요</h2>
-      <p class="final-sub">서울 강동구 아리수로 21 · 평일 08:00–21:00 · 주말 10:00–21:00</p>
-      <div class="hero-actions final-actions">
+      <p class="final-sub reveal" data-rv-delay="100">서울 강동구 아리수로 21 · 평일 08:00–21:00 · 주말 10:00–21:00</p>
+      <div class="hero-actions final-actions reveal" data-rv-delay="200">
         <a class="btn btn-wood" href="https://map.naver.com/p/search/%EC%84%9C%EC%9A%B8%20%EA%B0%95%EB%8F%99%EA%B5%AC%20%EC%95%84%EB%A6%AC%EC%88%98%EB%A1%9C%2021" target="_blank" rel="noopener">길찾기</a>
         <button type="button" class="btn btn-line btn-line-dark js-call">전화하기</button>
       </div>
