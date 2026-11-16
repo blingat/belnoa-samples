@@ -276,6 +276,7 @@ html.js .reveal.in { opacity: 1; transform: none; }
   .instagram { padding: var(--sp-9) 0; } /* P-1 데스크톱 100–140px 구간: 128px */
   .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-6); align-items: start; }
   .map-slot { margin-top: 0; }
+  .final-cta { padding: var(--sp-9) 0; } /* C-5 데스크톱 ≥120px 구간: 128px (모바일은 .section 기본 64px로 ≥64px 충족) */
   .final-title { font-size: 48px; }
   .sticky-bar { display: none; }
   body { padding-bottom: 0; }
