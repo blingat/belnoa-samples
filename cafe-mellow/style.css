@@ -113,7 +113,10 @@ html.js .reveal { opacity: 0; transform: translateY(14px); transition: opacity v
 html.js .reveal.in { opacity: 1; transform: none; }
 
 /* ===== BLOCK: header (인터랙션 패스: sticky + 스크롤스파이 강조) ===== */
-.site-header { position: sticky; top: 0; z-index: 40; border-bottom: 1px solid var(--line); background: var(--bg); }
+.site-header { position: sticky; top: 0; z-index: 40; border-bottom: 1px solid var(--line); background: var(--bg); transition: box-shadow var(--ease); }
+/* 히어로를 지난 뒤(past-hero) 헤더에 그림자 + 전화 버튼을 우드로 강조해 전환 동선을 붙든다 */
+.site-header.is-scrolled { box-shadow: 0 4px 16px rgba(31, 27, 22, 0.10); }
+.site-header.is-scrolled .btn-line { background: var(--accent); border-color: var(--accent); }
 .header-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); min-height: 56px; }
 .brand { font-size: var(--fs-2); font-weight: var(--fw-bold); }
 .header-nav { display: none; gap: var(--sp-4); }
@@ -123,9 +126,10 @@ html.js .reveal.in { opacity: 1; transform: none; }
 section[id] { scroll-margin-top: 72px; } /* sticky 헤더에 앵커 도착 지점이 가려지지 않게 */
 
 /* ===== SECTION: hero (재설계 — 사진 풀블리드 + 하단 스크림 위 오버레이 적층) ===== */
-.hero { position: relative; background: var(--dark); }
-.hero-photo-g1 { position: absolute; inset: 0; overflow: hidden; } /* 패럴랙스 이동 시 사진 가장자리가 비지 않게 */
-/* 패럴랙스: SDA 지원 시 아래 @supports 블록의 CSS 애니메이션, 미지원 시 script.js가 translateY(±10px)를 얹는다. scale(1.08)은 이동 여유분 */
+.hero { position: relative; background: var(--dark); overflow: hidden; }
+/* 패럴랙스는 figure(이동 ±10px), Ken Burns는 img(느린 줌) — 서로 다른 요소에 걸어 transform 충돌을 피한다.
+   figure에 -14px 여유를 둬 패럴랙스 이동 시 가장자리가 비지 않게 한다 */
+.hero-photo-g1 { position: absolute; inset: -14px; overflow: hidden; }
 .hero-photo-g1 img { width: 100%; height: 100%; object-fit: cover; object-position: 62% 50%; transform: scale(1.08); will-change: transform; }
 /* 하단 스크림 — 사진 위 흰 글자 가독성 (투명 → 다크) */
 .hero-photo-g1::after {
@@ -155,19 +159,57 @@ section[id] { scroll-margin-top: 72px; } /* sticky 헤더에 앵커 도착 지�
    모션은 no-preference에서만 opt-in — reduce에서는 애니메이션 자체가 없어 최종 상태가 그대로 보인다 */
 @supports (animation-timeline: scroll()) {
   @media (prefers-reduced-motion: no-preference) {
-    .hero-photo-g1 img {
+    .hero-photo-g1 {
       animation: hero-parallax linear both;
       animation-timeline: scroll(root block);
       animation-range: 0px 900px;
     }
     @keyframes hero-parallax {
-      from { transform: translateY(-10px) scale(1.08); }
-      to { transform: translateY(10px) scale(1.08); }
+      from { transform: translateY(-10px); }
+      to { transform: translateY(10px); }
     }
   }
 }
+/* Ken Burns — 사진 자체의 느린 줌 (패럴랙스와 별도 요소라 병행 가능). 모션은 no-preference에서만 opt-in */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-photo-g1 img { animation: hero-kenburns 22s ease-in-out infinite alternate; }
+  @keyframes hero-kenburns {
+    from { transform: scale(1.06) translate(0, 0); }
+    to { transform: scale(1.15) translate(-1.2%, 1%); }
+  }
+  /* 헤드라인 단어 단위 stagger 등장 (--wd는 HTML 인라인 지연값) */
+  html.js .hero-word { display: inline-block; animation: hero-rise 550ms ease-out both; animation-delay: var(--wd, 0ms); }
+  @keyframes hero-rise {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: none; }
+  }
+  /* 스크롤 유도 인디케이터 — 셰브론이 아래로 살랑인다 */
+  .hero-scroll-icon { animation: hero-scroll-bob 1.8s ease-in-out infinite; }
+  @keyframes hero-scroll-bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(5px); }
+  }
+}
+.hero-scroll {
+  display: inline-flex; flex-direction: column; align-items: center; gap: 2px;
+  margin-top: var(--sp-5); color: #FFFFFF; opacity: 0.85;
+  transition: opacity var(--ease);
+}
+.hero-scroll:hover { opacity: 1; }
+.hero-scroll-text { font-size: 13px; font-weight: var(--fw-bold); letter-spacing: 0.08em; }
+.hero-scroll-icon { width: 22px; height: 22px; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
 .btn-hero { min-height: 52px; } /* G1 명세: 히어로 CTA 높이 52px */
+
+/* ===== SECTION: marquee (장치 레이어 — 히어로 아래 안내 띠, 우드 배경+다크 텍스트 4.9:1 검증 조합) =====
+   트랙은 동일 세트 4벌 — -50% 지점이 세트 2벌 분량과 정확히 겹쳐 끊김 없이 순환한다 */
+.marquee { background: var(--accent); color: var(--text); overflow: hidden; }
+.marquee-track { display: flex; width: max-content; animation: marquee-scroll 30s linear infinite; }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+.marquee-set { display: flex; align-items: center; white-space: nowrap; padding: var(--sp-2) 0; font-weight: var(--fw-bold); }
+.marquee-item { padding: 0 var(--sp-3); }
+.marquee-dot { opacity: 0.55; }
+@keyframes marquee-scroll { to { transform: translateX(-50%); } }
 
 /* ===== SECTION: about (G2 — 다크 구간, 라벨+제목 2단, 사진 3:2, 차별점 카드 3개) ===== */
 .about { background: var(--dark); color: var(--on-dark); }
@@ -192,6 +234,9 @@ section[id] { scroll-margin-top: 72px; } /* sticky 헤더에 앵커 도착 지�
 .menu .section-eyebrow { color: var(--accent-deep); } /* 밝은 배경용 라벨 색 (다크 구간 기본값과 분리) */
 .menu .section-title { margin-bottom: var(--sp-5); } /* 설명문 폐기로 제목 아래 바로 피처드 */
 .menu-feature { margin-bottom: var(--sp-6); }
+/* 피처드 카드 틸트: JS가 포인터 위치로 rotateX/Y를 얹는다 (데스크톱 정밀 포인터만, script.js에서 게이트).
+   transition은 복귀를 부드럽게 하고, transform은 레이아웃에 영향을 주지 않는다 */
+.menu-feature-photo { transition: transform 300ms ease-out; transform-style: preserve-3d; }
 .menu-feature-photo img { width: 100%; border-radius: var(--radius); aspect-ratio: 3 / 2; object-fit: cover; }
 .menu-feature-text { padding-top: var(--sp-3); }
 .badge {
@@ -203,14 +248,25 @@ section[id] { scroll-margin-top: 72px; } /* sticky 헤더에 앵커 도착 지�
 .menu-feature-name { font-size: var(--fs-3); font-weight: var(--fw-bold); margin-bottom: var(--sp-1); }
 .menu-feature-desc { color: var(--text-sub); margin-bottom: var(--sp-2); }
 .menu-feature-price { font-size: var(--fs-2); font-weight: var(--fw-bold); }
-/* 메뉴 카테고리 탭: 클릭 시 해당 그룹으로 부드럽게 이동 + 하이라이트 (2단 나열·전 가격 공개 구조는 유지) */
-.menu-tabs { display: flex; gap: var(--sp-2); margin-bottom: var(--sp-5); }
+/* 메뉴 카테고리 탭: 클릭 시 해당 그룹으로 부드럽게 이동 + 하이라이트 (2단 나열·전 가격 공개 구조는 유지)
+   장치 레이어: JS가 붙으면(.tabs-js) 다크 필 인디케이터가 활성 탭 아래로 슬라이드한다. JS 없으면 기존 필 스타일이 폴백 */
+.menu-tabs { position: relative; display: flex; gap: var(--sp-2); margin-bottom: var(--sp-5); }
+.menu-tab-ind {
+  position: absolute; left: 0; top: 0; z-index: 0;
+  background: var(--text); border-radius: 999px;
+  opacity: 0; pointer-events: none;
+  transition: transform 300ms ease-out, width 300ms ease-out, opacity var(--ease);
+}
+.menu-tabs.tabs-js .menu-tab-ind { opacity: 1; }
 .menu-tab {
+  position: relative; z-index: 1;
   min-height: 44px; padding: var(--sp-2) var(--sp-4);
   border: 1px solid var(--line); border-radius: 999px;
   background: var(--bg); color: var(--text-sub); font-weight: var(--fw-bold);
   transition: background-color var(--ease), color var(--ease), border-color var(--ease), transform var(--ease);
 }
+.menu-tabs.tabs-js .menu-tab { background: transparent; }
+.menu-tabs.tabs-js .menu-tab.is-active { background: transparent; border-color: transparent; }
 .menu-tab:active { transform: scale(0.97); }
 .menu-tab.is-active { background: var(--text); color: var(--bg); border-color: var(--text); }
 .menu-group { margin-bottom: var(--sp-5); border-radius: var(--radius); scroll-margin-top: 86px; } /* 72px + 리빌 상승분 14px — 탭 이동 시 제목이 헤더에 붙지 않게 */
@@ -220,8 +276,8 @@ section[id] { scroll-margin-top: 72px; } /* sticky 헤더에 앵커 도착 지�
   100% { background-color: rgba(176, 125, 79, 0); box-shadow: 0 0 0 8px rgba(176, 125, 79, 0); }
 }
 .menu-group-title { font-size: var(--fs-2); font-weight: var(--fw-bold); padding-bottom: var(--sp-2); border-bottom: 2px solid var(--text); margin-bottom: var(--sp-2); }
-.price-list li { display: flex; align-items: baseline; gap: var(--sp-2); padding: var(--sp-2) 0; }
-.item-name { font-weight: var(--fw-normal); }
+.price-list li { display: flex; align-items: baseline; gap: var(--sp-2); padding: var(--sp-2); margin: 0 calc(var(--sp-2) * -1); border-radius: var(--radius); transition: background-color var(--ease); }
+.item-name { font-weight: var(--fw-normal); transition: transform var(--ease); }
 .dots { flex: 1; border-bottom: 2px dotted var(--text-sub); opacity: 0.45; transform: translateY(-4px); }
 .item-price { font-weight: var(--fw-bold); font-variant-numeric: tabular-nums; }
 .tag {
@@ -247,6 +303,21 @@ section[id] { scroll-margin-top: 72px; } /* sticky 헤더에 앵커 도착 지�
 .info-row dd { color: var(--text-sub); }
 .hours li { display: flex; justify-content: space-between; gap: var(--sp-3); padding: var(--sp-1) 0; }
 .hours li.today { color: var(--text); font-weight: var(--fw-bold); }
+.hours li.today span:first-child::after {
+  content: "오늘"; margin-left: var(--sp-2); padding: 0 var(--sp-2);
+  background: var(--accent); color: var(--text); border-radius: 999px;
+  font-size: 13px; font-weight: var(--fw-bold); vertical-align: 2px;
+}
+/* 오늘 배지: script.js가 오늘 요일·오늘 영업시간·영업 중 여부를 채운다 (JS 없으면 hidden 유지) */
+.today-badge {
+  display: inline-flex; align-items: center; gap: var(--sp-2);
+  padding: var(--sp-1) var(--sp-3); margin-bottom: var(--sp-5);
+  background: var(--bg); border: 1px solid var(--accent); border-radius: 999px;
+  font-weight: var(--fw-bold); color: var(--text);
+}
+.today-badge[hidden] { display: none; } /* display 지정이 hidden 속성을 덮지 않게 */
+.today-badge .today-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex: none; }
+.today-badge.is-open .today-dot { background: #2E7D46; }
 .map-slot { margin-top: var(--sp-5); }
 .map-figure { margin-bottom: var(--sp-3); }
 .map-figure img { width: 100%; border: 1px solid var(--line); border-radius: var(--radius); }
@@ -255,8 +326,31 @@ section[id] { scroll-margin-top: 72px; } /* sticky 헤더에 앵커 도착 지�
 /* ===== SECTION: instagram (G2I — 완성형 사진 그리드) ===== */
 .instagram .section-eyebrow { color: var(--accent-deep); }
 .instagram .section-title { margin-bottom: var(--sp-5); }
-.ig-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-2); margin-bottom: var(--sp-4); }
+.ig-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-2); margin-bottom: var(--sp-3); }
+.ig-open { display: block; width: 100%; padding: 0; border-radius: var(--radius); }
+.ig-open:focus-visible { outline: 2px solid var(--accent-deep); outline-offset: 2px; }
 .ig-photo img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: var(--radius); }
+.ig-hint { color: var(--text-sub); font-size: 13px; margin-bottom: var(--sp-4); }
+
+/* ===== SECTION: faq (장치 레이어 — 아코디언, 배경 리듬상 정보 크림 다음 흰색이 아닌 표면으로) ===== */
+.faq { background: var(--surface); }
+.faq .section-eyebrow { color: var(--accent-deep); }
+.faq .section-title { margin-bottom: var(--sp-5); }
+.faq-list { border-top: 1px solid var(--line); }
+.faq-item { border-bottom: 1px solid var(--line); }
+.faq-q-wrap { font-size: inherit; }
+.faq-q {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3);
+  width: 100%; min-height: 56px; padding: var(--sp-3) var(--sp-1);
+  font-weight: var(--fw-bold); text-align: left;
+}
+.faq-icon { width: 20px; height: 20px; flex: none; color: var(--accent-deep); transition: transform 300ms ease-out; }
+.faq-item.open .faq-icon { transform: rotate(180deg); }
+/* 패널 개폐: grid-template-rows 0fr→1fr — 높이 측정 없이 부드럽게 열리고, 내부 텍스트는 overflow로 감춘다 */
+.faq-panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 320ms ease-out; }
+.faq-item.open .faq-panel { grid-template-rows: 1fr; }
+.faq-panel-inner { overflow: hidden; }
+.faq-a { padding: 0 var(--sp-1) var(--sp-4); color: var(--text-sub); }
 
 /* ===== SECTION: final CTA (다크 + 대형 흰색 헤드라인) ===== */
 .final-cta { background: var(--dark); color: var(--on-dark); text-align: center; }
@@ -289,6 +383,56 @@ section[id] { scroll-margin-top: 72px; } /* sticky 헤더에 앵커 도착 지�
 .sticky-btn:active { transform: scale(0.97); }
 .sticky-directions { background: var(--accent); color: var(--text); }
 .sticky-call { background: var(--bg); color: var(--text); border-top: 1px solid var(--line); }
+/* 장치 레이어: 하단 바는 히어로를 지난 뒤(past-hero)에만 슬라이드로 등장 — 첫 화면은 히어로 CTA에 집중.
+   html.js 게이트: JS가 없으면 숨김 규칙 자체가 적용되지 않아 기본 표시가 유지된다 */
+.sticky-bar { transition: transform 320ms ease-out; }
+html.js body:not(.past-hero) .sticky-bar { transform: translateY(105%); }
+html.js body.past-hero .sticky-bar { transform: translateY(0); }
+
+/* ===== BLOCK: lightbox (네이티브 dialog — ESC·포커스 관리는 브라우저가 담당) ===== */
+.lightbox {
+  border: none; padding: var(--sp-4); margin: auto;
+  width: min(92vw, 560px);
+  background: var(--bg); border-radius: var(--radius);
+  box-shadow: 0 24px 64px rgba(26, 21, 16, 0.4);
+}
+.lightbox::backdrop { background: rgba(26, 21, 16, 0.78); }
+.lb-figure img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: var(--radius); }
+.lb-cap { margin-top: var(--sp-2); color: var(--text-sub); text-align: center; }
+.lb-bar { display: flex; align-items: center; justify-content: center; gap: var(--sp-3); margin-top: var(--sp-3); }
+.lb-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 1px solid var(--line); background: var(--bg);
+  transition: background-color var(--ease), transform var(--ease);
+}
+.lb-btn:hover { background: var(--surface); }
+.lb-btn:active { transform: scale(0.94); }
+.lb-close { background: var(--text); color: var(--bg); border-color: var(--text); }
+.lb-close:hover { background: var(--dark); }
+.lb-count { font-weight: var(--fw-bold); font-variant-numeric: tabular-nums; min-width: 52px; text-align: center; }
+.lb-dots { display: flex; justify-content: center; gap: var(--sp-2); margin-top: var(--sp-3); }
+.lb-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--line); padding: 0;
+  transition: background-color var(--ease), transform var(--ease);
+}
+.lb-dot.is-active { background: var(--accent-deep); transform: scale(1.25); }
+
+/* ===== BLOCK: back to top ===== */
+.to-top {
+  position: fixed; right: var(--sp-3); bottom: 72px; z-index: 45;
+  display: flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--text); color: var(--bg);
+  box-shadow: 0 6px 18px rgba(31, 27, 22, 0.28);
+  opacity: 0; pointer-events: none; transform: translateY(8px);
+  transition: opacity var(--ease), transform var(--ease), background-color var(--ease);
+}
+.to-top.show { opacity: 1; pointer-events: auto; transform: none; }
+.to-top:hover { background: var(--dark); }
+.to-top:active { transform: scale(0.94); }
+.to-top[hidden] { display: none; }
 
 /* ===== toast ===== */
 .toast {
@@ -314,6 +458,9 @@ section[id] { scroll-margin-top: 72px; } /* sticky 헤더에 앵커 도착 지�
     opacity: 0; transition: opacity 250ms ease-out;
   }
   .ig-photo:hover::after { opacity: 1; }
+  /* 메뉴 행 호버 피드백: 배경 틴트 + 이름이 살짝 밀려 들어온다 (transform만 — 레이아웃 시프트 없음) */
+  .price-list li:hover { background: rgba(176, 125, 79, 0.08); }
+  .price-list li:hover .item-name { transform: translateX(4px); }
 }
 
 /* ===== 모션 최소화 설정 존중 — 켜져 있으면 모션 전부 끄고 콘텐츠는 즉시 표시 ===== */
@@ -321,8 +468,17 @@ section[id] { scroll-margin-top: 72px; } /* sticky 헤더에 앵커 도착 지�
   html { scroll-behavior: auto; }
   html.js .reveal { opacity: 1; transform: none; transition: none; }
   .menu-group.flash { animation: none; }
-  .hero-photo-g1 img { transform: none; will-change: auto; }
+  .hero-photo-g1 img { transform: none; will-change: auto; animation: none; }
+  .hero-photo-g1 { animation: none; }
   .menu-feature-photo img, .ig-photo img { transition: none; }
+  /* 장치 레이어: 흐름·개폐·슬라이드 모션을 끄고 최종 상태만 보인다 (콘텐츠가 중간 상태에 남지 않게) */
+  .marquee-track { animation: none; }
+  .faq-panel { transition: none; }
+  .faq-icon { transition: none; }
+  .menu-tab-ind { transition: none; }
+  .sticky-bar { transition: none; }
+  .to-top { transition: none; }
+  .menu-feature-photo { transition: none; transform: none; }
 }
 
 /* ===== 반응형: 태블릿·데스크톱 ===== */
@@ -345,6 +501,8 @@ section[id] { scroll-margin-top: 72px; } /* sticky 헤더에 앵커 도착 지�
   .fullbleed img { height: 440px; }
   .info { padding: var(--sp-9) 0; } /* P-1 데스크톱 100–140px 구간: 128px */
   .instagram { padding: var(--sp-9) 0; } /* P-1 데스크톱 100–140px 구간: 128px */
+  .faq { padding: var(--sp-9) 0; } /* P-1 데스크톱 100–140px 구간: 128px */
+  .to-top { right: var(--sp-4); bottom: var(--sp-4); } /* 데스크톱은 하단 바가 없어 우하단 고정 */
   .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-6); align-items: start; }
   .map-slot { margin-top: 0; }
   .final-cta { padding: var(--sp-9) 0; } /* C-5 데스크톱 ≥120px 구간: 128px (모바일은 .section 기본 64px로 ≥64px 충족) */
