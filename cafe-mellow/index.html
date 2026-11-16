@@ -9,6 +9,7 @@
 <meta property="og:title" content="카페 멜로우 — 동네 스페셜티 카페">
 <meta property="og:description" content="매일 아침 직접 볶는 원두, 동네 스페셜티 카페. 메뉴·가격 전부 공개합니다.">
 <meta property="og:image" content="assets/hero.jpg">
+<script>document.documentElement.classList.add("js");</script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
 <link rel="stylesheet" href="style.css">
 </head>
@@ -29,13 +30,16 @@
 
 <main id="top">
 
-  <!-- ===== SECTION: hero ===== -->
+  <!-- ===== SECTION: hero (대형 헤드라인 + 알약 배지 + 사진 위 해시태그) ===== -->
   <section class="hero">
     <div class="container hero-grid">
       <div class="hero-text">
-        <p class="hero-eyebrow">동네 스페셜티 카페</p>
-        <h1 class="hero-title">카페 멜로우</h1>
-        <p class="hero-lead">매일 아침 직접 볶는 원두,<br>동네 스페셜티 카페</p>
+        <p class="pill pill-hero">동네 스페셜티 카페</p>
+        <h1 class="hero-title reveal">
+          <span class="hero-line">매일 아침</span>
+          <span class="hero-line"><mark class="hl">직접 볶는</mark> 원두,</span>
+          <span class="hero-line hero-line-accent">동네 스페셜티 카페</span>
+        </h1>
         <div class="hero-actions">
           <a class="btn btn-wood" href="https://map.naver.com/p/search/%EC%84%9C%EC%9A%B8%20%EA%B0%95%EB%8F%99%EA%B5%AC%20%EC%95%84%EB%A6%AC%EC%88%98%EB%A1%9C%2021" target="_blank" rel="noopener">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -50,41 +54,43 @@
       </div>
       <figure class="hero-photo">
         <img src="assets/hero.jpg" alt="카페 멜로우 매장 내부 — 우드 테이블과 커피 바" width="1920" height="1280" fetchpriority="high">
+        <figcaption class="hero-tags">
+          <span class="pill pill-tag">#직접로스팅</span>
+          <span class="pill pill-tag">#시그니처크림라떼</span>
+          <span class="pill pill-tag">#원두구매</span>
+        </figcaption>
       </figure>
     </div>
   </section>
 
-  <!-- ===== SECTION: about (차별점 3가지) ===== -->
+  <!-- ===== BLOCK: marquee (메뉴·키워드 띠) ===== -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span class="marquee-group">크림라떼 6,500&nbsp;&nbsp;·&nbsp;&nbsp;아메리카노 4,500&nbsp;&nbsp;·&nbsp;&nbsp;바스크 치즈케이크 6,500&nbsp;&nbsp;·&nbsp;&nbsp;휘낭시에 3,000&nbsp;&nbsp;·&nbsp;&nbsp;직접 로스팅&nbsp;&nbsp;·&nbsp;&nbsp;원두 구매 가능&nbsp;&nbsp;·&nbsp;&nbsp;</span>
+      <span class="marquee-group">크림라떼 6,500&nbsp;&nbsp;·&nbsp;&nbsp;아메리카노 4,500&nbsp;&nbsp;·&nbsp;&nbsp;바스크 치즈케이크 6,500&nbsp;&nbsp;·&nbsp;&nbsp;휘낭시에 3,000&nbsp;&nbsp;·&nbsp;&nbsp;직접 로스팅&nbsp;&nbsp;·&nbsp;&nbsp;원두 구매 가능&nbsp;&nbsp;·&nbsp;&nbsp;</span>
+    </div>
+  </div>
+
+  <!-- ===== SECTION: about (차별점 3가지 — 다크 구간, 마지막 카드 기울임) ===== -->
   <section class="section about" id="about">
     <div class="container">
-      <h2 class="section-title">멜로우가 다른 이유</h2>
-      <div class="about-grid">
-        <ol class="points">
-          <li class="point">
-            <span class="point-num">01</span>
-            <div>
-              <h3 class="point-title">직접 로스팅</h3>
-              <p class="point-desc">매일 아침 매장에서 직접 볶은 원두로만 내립니다. 볶은 날짜가 오래된 원두는 쓰지 않습니다.</p>
-            </div>
-          </li>
-          <li class="point">
-            <span class="point-num">02</span>
-            <div>
-              <h3 class="point-title">시그니처 크림라떼</h3>
-              <p class="point-desc">멜로우에서만 맛볼 수 있는 크림라떼. 진한 에스프레소 위에 부드러운 크림을 올렸습니다.</p>
-            </div>
-          </li>
-          <li class="point">
-            <span class="point-num">03</span>
-            <div>
-              <h3 class="point-title">원두 구매 가능</h3>
-              <p class="point-desc">매장에서 마신 그 원두를 집에서도. 매장에서 직접 볶은 원두를 구매할 수 있습니다.</p>
-            </div>
-          </li>
-        </ol>
-        <figure class="about-photo">
-          <img src="assets/roasting.jpg" alt="매장에서 직접 볶은 원두와 로스터" width="1920" height="1280" loading="lazy">
-        </figure>
+      <h2 class="section-title reveal">멜로우가 다른 이유</h2>
+      <div class="cards">
+        <article class="card">
+          <span class="point-num">01</span>
+          <h3 class="point-title">직접 로스팅</h3>
+          <p class="point-desc">매일 아침 매장에서 직접 볶은 원두로만 내립니다. 볶은 날짜가 오래된 원두는 쓰지 않습니다.</p>
+        </article>
+        <article class="card">
+          <span class="point-num">02</span>
+          <h3 class="point-title">시그니처 크림라떼</h3>
+          <p class="point-desc">멜로우에서만 맛볼 수 있는 크림라떼. 진한 에스프레소 위에 부드러운 크림을 올렸습니다.</p>
+        </article>
+        <article class="card card-tilt">
+          <span class="point-num">03</span>
+          <h3 class="point-title">원두 구매 가능</h3>
+          <p class="point-desc">매장에서 마신 그 원두를 집에서도. 매장에서 직접 볶은 원두를 구매할 수 있습니다.</p>
+        </article>
       </div>
     </div>
   </section>
@@ -92,7 +98,7 @@
   <!-- ===== SECTION: menu (메뉴·가격 전부 공개) ===== -->
   <section class="section menu" id="menu">
     <div class="container">
-      <h2 class="section-title">메뉴·가격</h2>
+      <h2 class="section-title reveal">메뉴·가격</h2>
       <p class="section-sub">가격을 숨기지 않습니다. 전 메뉴 가격을 그대로 공개합니다.</p>
 
       <div class="menu-feature">
@@ -132,10 +138,20 @@
     </div>
   </section>
 
+  <!-- ===== SECTION: fullbleed (로스팅 풀블리드 사진 + 캡션 알약) ===== -->
+  <section class="fullbleed">
+    <img src="assets/roasting.jpg" alt="매장에서 직접 볶은 원두를 식히는 모습" width="2736" height="912" loading="lazy">
+    <div class="fullbleed-caption">
+      <div class="container">
+        <span class="pill pill-tag">매일 아침 직접 볶는 원두</span>
+      </div>
+    </div>
+  </section>
+
   <!-- ===== SECTION: info (매장 정보) ===== -->
   <section class="section info" id="info">
     <div class="container">
-      <h2 class="section-title">매장 정보</h2>
+      <h2 class="section-title reveal">매장 정보</h2>
       <div class="info-grid">
         <dl class="info-list">
           <div class="info-row">
@@ -170,7 +186,7 @@
   <!-- ===== SECTION: instagram (피드 연동 자리) ===== -->
   <section class="section instagram" id="instagram">
     <div class="container">
-      <h2 class="section-title">인스타그램</h2>
+      <h2 class="section-title reveal">인스타그램</h2>
       <p class="section-sub">매일의 로스팅과 신메뉴 소식은 인스타그램에서 가장 먼저 올라갑니다.</p>
       <div class="ig-slot" aria-label="인스타그램 피드 연동 자리">
         <div class="ig-cell"></div>
@@ -181,14 +197,14 @@
     </div>
   </section>
 
-  <!-- ===== SECTION: final CTA ===== -->
+  <!-- ===== SECTION: final CTA (다크 + 대형 흰색 헤드라인) ===== -->
   <section class="section final-cta">
     <div class="container">
-      <h2 class="final-title">오늘, 멜로우에서 쉬어가세요</h2>
+      <h2 class="final-title reveal">오늘, 멜로우에서 쉬어가세요</h2>
       <p class="final-sub">서울 강동구 아리수로 21 · 평일 08:00–21:00 · 주말 10:00–21:00</p>
       <div class="hero-actions final-actions">
         <a class="btn btn-wood" href="https://map.naver.com/p/search/%EC%84%9C%EC%9A%B8%20%EA%B0%95%EB%8F%99%EA%B5%AC%20%EC%95%84%EB%A6%AC%EC%88%98%EB%A1%9C%2021" target="_blank" rel="noopener">길찾기</a>
-        <button type="button" class="btn btn-line js-call">전화하기</button>
+        <button type="button" class="btn btn-line btn-line-dark js-call">전화하기</button>
       </div>
     </div>
   </section>
