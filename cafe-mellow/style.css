@@ -141,15 +141,18 @@ html.js .reveal.in { opacity: 1; transform: none; }
 .about .section-title { color: var(--on-dark); margin-bottom: var(--sp-4); }
 .about-photo { margin-bottom: var(--sp-5); }
 .about-photo img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: var(--radius); }
-.photo-credit { margin-top: var(--sp-2); font-size: 13px; color: var(--on-dark-sub); }
-.photo-credit a { text-decoration: underline; }
+.footer-credit { margin-top: var(--sp-3); font-size: 13px; color: var(--text-sub); }
+.footer-credit a { text-decoration: underline; }
 .cards { display: flex; flex-direction: column; gap: var(--sp-3); }
 .card { background: var(--dark-card); border-radius: var(--radius); padding: var(--sp-5) var(--sp-4); }
 .point-num { font-size: var(--fs-2); font-weight: var(--fw-bold); color: var(--accent); line-height: 1.3; }
 .point-title { font-size: var(--fs-2); font-weight: var(--fw-bold); margin: var(--sp-2) 0 var(--sp-1); color: var(--on-dark); }
 .point-desc { color: var(--on-dark-sub); }
 
-/* ===== SECTION: menu ===== */
+/* ===== SECTION: menu (G2M — 배경 리듬: 소개 다크 → 메뉴 흰색) ===== */
+.menu { background: var(--bg); }
+.menu .section-eyebrow { color: var(--accent-deep); } /* 밝은 배경용 라벨 색 (다크 구간 기본값과 분리) */
+.menu .section-title { margin-bottom: var(--sp-5); } /* 설명문 폐기로 제목 아래 바로 피처드 */
 .menu-feature { margin-bottom: var(--sp-6); }
 .menu-feature-photo img { width: 100%; border-radius: var(--radius); aspect-ratio: 3 / 2; object-fit: cover; }
 .menu-feature-text { padding-top: var(--sp-3); }
@@ -260,6 +263,7 @@ html.js .reveal.in { opacity: 1; transform: none; }
   .hero-body { padding: var(--sp-7) 0 var(--sp-8); }
   .hero-title { font-size: 64px; }
   .about { padding: var(--sp-9) 0; } /* P-1 데스크톱 100–140px 구간: 128px */
+  .menu { padding: var(--sp-9) 0; } /* P-1 데스크톱 100–140px 구간: 128px */
   .about-layout { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-6); align-items: start; }
   .about-photo { margin-bottom: 0; }
   .about .cards { gap: var(--sp-4); }
